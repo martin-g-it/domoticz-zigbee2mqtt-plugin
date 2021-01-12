@@ -6,7 +6,7 @@ class TradfriRemoteSwitchOnOff(AdapterWithBattery):
     def __init__(self, devices):
         super().__init__(devices)
 
-        self.switch = SelectorSwitch(devices, 'switch', 'click')
+        self.switch = SelectorSwitch(devices, 'switch', 'action')
         self.switch.add_level('Off', 'off')
         self.switch.add_level('On', 'on')
         self.switch.add_level('Up', 'brightness_up')
@@ -19,14 +19,14 @@ class TradfriRemoteSwitchOnOff(AdapterWithBattery):
         self.devices.append(self.switch)
 
     def handle_mqtt_message(self, message):
-        if 'click' not in message.raw:
+        if 'action' not in message.raw:
             return
 
         device_data = self._get_legacy_device_data()
         converted_message = self.convert_message(message)
-        click = message.raw['click']
+        action = message.raw['action']
 
-        if click == '':
+        if action == '':
             return
         else:
             for device in self.devices:
